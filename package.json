@@ -4,7 +4,8 @@
   "description": "The practice of ECMAScript2015(ES6)",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --devtool eval-source-map --progress --colors --hot --inline --content-base ./dist"
+    "start": "webpack",
+    "dev": "webpack-dev-server --devtool eval-source-map --progress --colors --hot --inline --content-base ./dist"
   },
   "repository": {
     "type": "git",
