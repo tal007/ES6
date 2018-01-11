@@ -1,11 +1,10 @@
 module.exports = {
     entry:[
         "babel-polyfill",
-        "index.js"
+        "./index.js"
     ],
     output: {
-        path: __dirname + "./dist/",
-        publicPath: "/dist/",
+        path: __dirname + "/dist",
         filename: "bundle.js"
     },
     module: {
