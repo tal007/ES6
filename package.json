@@ -4,7 +4,7 @@
   "description": "The practice of ECMAScript2015(ES6)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack-dev-server --devtool eval-source-map --progress --colors --hot --inline --content-base ./dist"
   },
   "repository": {
     "type": "git",
