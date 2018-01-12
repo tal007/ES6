@@ -2,8 +2,8 @@
 
 # 学习ES6的笔记以及练手代码
 
+## let and const
 ```javascript
-//  let and const
 let oWrap = document.body;
 {
     let a = "1";
