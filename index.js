@@ -440,3 +440,122 @@ let oWrap = document.body;
     [1, 2, 3].includes(3, 3);  // false
     [1, 2, 3].includes(3, -1); // true
 }
+
+// 对象
+{
+    var foo = "111";
+    // 简写
+    var obj = {foo}
+    // 等同于
+    var obj = {foo: foo} 
+
+    var o = {
+        method() {
+          return "Hello!";
+        }
+    };
+      // 等同于
+    var o = {
+        method: function() {
+            return "Hello!";
+        }
+    };
+}
+{
+    // ES6 允许字面量定义对象时，允许把表达式放在方括号内。
+    var propKey = 'foo';
+
+    var obj = {
+        [propKey]: true,
+        ['a' + 'bc']: 123
+    };
+
+    var obj = {
+        ['h' + 'ello']() {
+            return 'hi';
+        }
+    };
+      
+    obj.hello() // hi
+}
+{
+    // 方法
+    // Object.is() 它用来比较两个值是否严格相等，与严格比较运算符（===）的行为基本一致。
+    // 但是：下面两个是例外
+    +0 === -0 //true
+    NaN === NaN // false
+
+    Object.is(+0, -0) // false
+    Object.is(NaN, NaN) // true
+
+    // Object.assign
+    // 方法用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）。
+    const target = { a: 1, b: 1 };
+    const source1 = { b: 2, c: 2 };
+    const source2 = { c: 3 };
+    Object.assign(target, source1, source2);
+    // target // {a:1, b:2, c:3}
+    
+    // 第一个参数是目标对象，后面的参数都是源对象。
+    // 注意，如果目标对象与源对象有同名属性，或多个源对象有同名属性，则后面的属性会覆盖前面的属性。
+    // 如果只有一个参数，Object.assign会直接返回该参数。
+    const obj = {a: 1};
+    Object.assign(obj) === obj // true
+
+    // 如果该参数不是对象，则会先转成对象，然后返回。
+    // 由于undefined和null无法转成对象，所以如果它们作为参数，就会报错。
+
+    // Object.assign拷贝的属性是有限制的，只拷贝源对象的自身属性（不拷贝继承属性），也不拷贝不可枚举的属性（enumerable: false）。
+    function clone(origin) {
+        return Object.assign({}, origin);
+    }
+    // 如果想要保持继承链，可以采用下面的代码。
+    function clone(origin) {
+        let originProto = Object.getPrototypeOf(origin);
+        return Object.assign(Object.create(originProto), origin);
+    }
+}
+{
+    // super 关键字
+    /* 
+        我们知道，this关键字总是指向函数所在的当前对象
+        ES6 又新增了另一个类似的关键字super，指向当前对象的原型对象
+        super关键字表示原型对象时，只能用在对象的方法之中，用在其他地方都会报错。
+    */
+}
+{
+    // Object.keys()，Object.values()，Object.entries()
+    var obj = { foo: 'bar', baz: 42 };
+
+    // Object.keys()
+    Object.keys(obj) // ["foo", "baz"]
+
+    // Object.values()
+    Object.values(obj) // ["bar", 42]
+    // Object.values只返回对象自身的可遍历属性。
+    const obj = Object.create({}, {p: {value: 42}});
+    Object.values(obj) // []
+    
+    // Object.entries()
+    // Object.entries方法返回一个数组，成员是参数对象自身的（不含继承的）所有可遍历（enumerable）属性的键值对数组。
+    const obj = { foo: 'bar', baz: 42 };
+    Object.entries(obj)
+    // [ ["foo", "bar"], ["baz", 42] ]
+}
+{
+    // ES2017中使用 扩展了对象 对象可以使用 ...
+    let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+    x // 1
+    y // 2
+    z // { a: 3, b: 4 }
+}
+{
+    // Null 传导运算符( ?. )
+    var firstName = (message
+        && message.body
+        && message.body.user
+        && message.body.user.firstName) || 'default';
+    
+    // 等同于
+    var firstName = message?.body?.user?.firstName || 'default';
+}
