@@ -260,3 +260,147 @@ let oWrap = document.body;
     x // 2
 }
 ```
+
+## 数组
+```javascript   
+{
+    // ...
+    // 扩展运算符（spread）是三个点（...），可以将一个数组或者类数组转化为一个使用 ， 分割的序列
+    // 所以可以使用此方法讲一个类数组转换为真正的数组
+    let add = [...document.getElementsByTagName("div")]
+
+    // 如果扩展运算符后面是一个空数组，则不产生任何效果。
+    var arr = [...[], 1]
+    // arr [1]
+
+    // 使用扩展运算可以不用在调用apply传参
+    // ES5 的写法
+    Math.max.apply(null, [14, 3, 77])
+
+    // ES6 的写法
+    Math.max(...[14, 3, 77])
+
+    // 等同于
+    Math.max(14, 3, 77);
+
+    // 如果将扩展运算符用于数组赋值，只能放在参数的最后一位，否则会报错。
+    // 扩展运算符在数组中只能是最后一个
+    const [...butLast, last] = [1, 2, 3, 4, 5];
+    // 报错
+
+    // 扩展运算符还可以将字符串转为真正的数组。
+    [...'hello']
+    // [ "h", "e", "l", "l", "o" ]
+}
+{
+    // Array.form
+    /* 
+        ...无法转换对象
+        Array.form：可以将对象转换为数组
+        任何 有length属性 的对象，都可以通过Array.from方法转为数组，而此时扩展运算符就无法转换。
+        
+        所以如果是对象，需要是下面的这种形式，即必须拥有 length 属性
+        let arrayLike = {
+            '0': 'a',
+            '1': 'b',
+            '2': 'c',
+            length: 3
+        };
+    */
+    var arrayLike = {
+        '0': 'a',
+        '1': 'b',
+        '2': 'c',
+        length: 3
+    };
+    
+    // ES5的写法
+    var arr1 = [].slice.call(arrayLike); // ['a', 'b', 'c']
+    
+    // ES6的写法
+    var arr2 = Array.from(arrayLike); // ['a', 'b', 'c']
+
+    /* 
+        ... 与 Array.from都可以将 字符串，Set与 Map结构的数据转换为数组
+    */
+    Array.from('hello')
+    // ['h', 'e', 'l', 'l', 'o']
+
+    let namesSet = new Set(['a', 'b'])
+    Array.from(namesSet) // ['a', 'b']
+
+    // Array.from还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组。
+    Array.from(arrayLike, x => x * x);
+    // 等同于
+    Array.from(arrayLike).map(x => x * x);
+    // 如果map函数里面用到了this关键字，还可以传入Array.from的第三个参数，用来绑定this。
+}
+{
+    // Array.of：Array.of方法用于将一组值，转换为数组。
+    Array.of(3, 11, 8) // [3,11,8]
+    Array.of(3) // [3]
+    Array.of() // []
+
+    /*     
+        数组实例的copyWithin方法
+        target（必需）：从该位置开始替换数据。如果为负值，表示倒数。
+        start（可选）：从该位置开始读取数据，默认为 0。如果为负值，表示倒数。
+        end（可选）：到该位置前停止读取数据，默认等于数组长度。如果为负值，表示倒数。
+    */
+    // 复制从 3开始 及以后的数组项 
+    [1, 2, 3, 4, 5].copyWithin(0, 3)
+    // [4, 5, 3, 4, 5]
+    
+    // 将3号位复制到0号位
+    [1, 2, 3, 4, 5].copyWithin(0, 3, 4)
+    // [4, 2, 3, 4, 5]
+
+    // 数组实例的find方法，用于找出第一个符合条件的数组成员。没有则为 undefined
+    // 参数与 forEach 一样
+    [1, 4, -5, 10].find((item,index,arr) => item < 0) // -5
+
+    // 数组实例的 findIndex 方法 则是返回这个 index
+    [1, 4, -5, 10].find((item,index,arr) => item < 0) // 2
+
+
+    // fill方法使用给定值，填充一个数组，
+    ['a', 'b', 'c'].fill(7)  // [7, 7, 7]
+    // fill方法还可以接受第二个和第三个参数，用于指定填充的起始位置和结束位置
+    ['a', 'b', 'c'].fill(7, 1, 2) // ['a', 7, 'c']
+
+    /* 
+        entries()，keys()和values()
+            可以用for...of循环进行遍历，唯一的区别是
+            keys()是对键名的遍历
+            values()是对键值的遍历
+            entries()是对键值对的遍历 
+    */
+
+    for (let index of ['a', 'b'].keys()) {
+        console.log(index);
+    }
+    // 0
+    // 1
+    
+    for (let elem of ['a', 'b'].values()) {
+        console.log(elem);
+    }
+    // 'a'
+    // 'b'
+    
+    for (let [index, elem] of ['a', 'b'].entries()) {
+        console.log(index, elem);
+    }
+    // 0 "a"
+    // 1 "b"
+
+    // 数组实例的 includes() 判断数组中是否包含这一项，返回一个布尔值
+    // 该方法的第二个参数表示搜索的起始位置，默认为0
+    // 使用此方法替代 indexOf
+    [1, 2, 3].includes(2)     // true
+    [1, 2, 3].includes(4)     // false
+    [1, 2, NaN].includes(NaN) // true
+    [1, 2, 3].includes(3, 3);  // false
+    [1, 2, 3].includes(3, -1); // true
+}
+```
