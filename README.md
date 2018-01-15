@@ -525,3 +525,187 @@ let oWrap = document.body;
     var firstName = message?.body?.user?.firstName || 'default';
 }
 ```
+
+## Symbol
+```javascript
+{
+    /* 
+        ES6 引入了一种新的原始数据类型Symbol，表示独一无二的值。
+
+    */
+    // 创建一个 Symbol , 不能使用 new 命名
+    // 这是因为生成的 Symbol 是一个原始类型的值，不是对象。
+    // 也就是说，由于 Symbol 值不是对象，所以不能添加属性。
+    // 基本上，它是一种类似于字符串的数据类型。
+    var s = Symbol();
+    typeof s; // "symbol"
+
+    // Symbol函数可以接受一个字符串作为参数，表示对 Symbol 实例的描述，
+    // 主要是为了在控制台显示，或者转为字符串时，比较容易区分。
+    // 如果不加参数，它们在控制台的输出都是Symbol()，不利于区分。
+
+    let s1 = Symbol('foo');
+    let s2 = Symbol('bar');
+
+    s1 // Symbol(foo)
+    s2 // Symbol(bar)
+
+    s1.toString() // "Symbol(foo)"
+    s2.toString() // "Symbol(bar)"
+
+    // Symbol函数的返回值是不相等的。无论有没有参数或者参数是否相等
+    // 使用 Symbol.for 返回就是相等的
+
+    Symbol.for("bar") === Symbol.for("bar")
+    // true
+
+    Symbol("bar") === Symbol("bar")
+    // false
+
+    // Symbol.keyFor方法返回一个已登记的 Symbol 类型值的key。
+    let s1 = Symbol.for("foo");
+    Symbol.keyFor(s1) // "foo"
+
+    let s2 = Symbol("foo");
+    Symbol.keyFor(s2) // undefined
+
+
+    var mySymbol = Symbol();
+
+    // 第一种写法
+    var a = {};
+    a[mySymbol] = 'Hello!';
+
+    // 第二种写法
+    var a = {
+        [mySymbol]: 'Hello!'
+    };
+
+    // 第三种写法
+    var a = {};
+    Object.defineProperty(a, mySymbol, { value: 'Hello!' });
+
+    // 以上写法都得到同样结果
+    a[mySymbol] // "Hello!"
+
+    a.mySymbol = 'Hello!';
+    a[mySymbol] // undefined
+    a['mySymbol'] // "Hello!"
+}
+{
+    // 模仿字符串就是：在代码之中多次出现、与代码形成强耦合的某一个具体的字符串或者数值。
+    // 比如 switch 的 case 中的字符串就是一个魔法字符串，因为这个值与case完全耦合
+    // 此时可以把他放在一个对象中，值为一个Symbol
+
+    const shapeType = {
+        triangle: Symbol()
+    };
+    function getArea(shape, options) {
+        let area = 0;
+        switch (shape) {
+            case shapeType.triangle:
+                area = .5 * options.width * options.height;
+                break;
+        }
+        return area;
+    }
+    getArea(shapeType.triangle, { width: 100, height: 100 });
+}
+{
+    // Symbol的内置方法，不做解释
+}
+```
+## Set 与 Map 数据结构
+```javascript
+{
+    // Set
+    // ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值。
+    const s = new Set();
+
+    var arr = [2, 3, 5, 4, 5, 2, 2];
+    arr.forEach(x => s.add(x));
+
+    for (let i of s) {
+        console.log(i);
+    };
+    // 2 3 5 4
+
+    // 所以，可是数组去重了
+
+    /* 
+        使用 new Set() 时，NaN的值是相等的，对象是不登的
+    */
+}
+{
+    /* 
+        Set 实例的属性和方法
+            Set 结构的实例有以下属性。
+
+            Set.prototype.constructor：构造函数，默认就是Set函数。
+            Set.prototype.size：返回Set实例的成员总数。
+            Set 实例的方法分为两大类：操作方法（用于操作数据）和遍历方法（用于遍历成员）。下面先介绍四个操作方法。
+
+            add(value)：添加某个值，返回 Set 结构本身。
+            delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。
+            has(value)：返回一个布尔值，表示该值是否为Set的成员。
+            clear()：清除所有成员，没有返回值。
+    */
+}
+{
+    /* 
+        遍历操作
+            Set 结构的实例有四个遍历方法，可以用于遍历成员。
+
+            keys()：返回键名的遍历器
+            values()：返回键值的遍历器
+            entries()：返回键值对的遍历器
+            forEach()：使用回调函数遍历每个成员
+    */
+}
+{
+    /* 
+        WeakSet
+        WeakSet 结构与 Set 类似，也是不重复的值的集合。但是，它与 Set 有两个区别。
+            首先，WeakSet 的成员只能是对象，而不能是其他类型的值。
+            其次，WeakSet 中的对象都是弱引用，即垃圾回收机制不考虑 WeakSet 对该对象的引用，
+            也就是说，如果其他对象都不再引用该对象，那么垃圾回收机制会自动回收该对象所占用的内存，
+            不考虑该对象还存在于 WeakSet 之中。
+    */
+}
+{
+    // Map
+    /* 
+    Map 数据结构。它类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，
+    各种类型的值（包括对象）都可以当作键。
+    也就是说，Object 结构提供了“字符串—值”的对应，Map 结构提供了“值—值”的对应，是一种更完善的 Hash 结构实现。
+    如果你需要“键值对”的数据结构，Map 比 Object 更合适。
+    */
+
+    /* 
+        Map方法：
+            size属性返回 Map 结构的成员总数。
+            set方法设置键名key对应的键值为value，然后返回整个 Map 结构。如果key已经有值，则键值会被更新，否则就新生成该键。
+            get方法读取key对应的键值，如果找不到key，返回undefined。
+            has方法返回一个布尔值，表示某个键是否在当前 Map 对象之中。
+            delete方法删除某个键，返回true。如果删除失败，返回false。
+            clear方法清除所有成员，没有返回值。
+    */
+    /* 
+        遍历方法
+            Map 结构原生提供三个遍历器生成函数和一个遍历方法。
+
+            keys()：返回键名的遍历器。
+            values()：返回键值的遍历器。
+            entries()：返回所有成员的遍历器。
+            forEach()：遍历 Map 的所有成员。
+    */
+}
+{
+    // WeakMap
+    /* 
+        WeakMap 结构与Map结构类似，也是用于生成键值对的集合。
+            首先，WeakMap只接受对象作为键名（null除外），不接受其他类型的值作为键名。
+            其次，WeakMap的键名所指向的对象，不计入垃圾回收机制。
+    */
+}
+```
