@@ -525,7 +525,6 @@ let oWrap = document.body;
     var firstName = message?.body?.user?.firstName || 'default';
 }
 ```
-<<<<<<< HEAD
 ## Promise对象
 ```javascript
 {
@@ -944,6 +943,5 @@ let oWrap = document.body;
             首先，WeakMap只接受对象作为键名（null除外），不接受其他类型的值作为键名。
             其次，WeakMap的键名所指向的对象，不计入垃圾回收机制。
     */
->>>>>>> 133a4f7893798ebab518c60f452f63ff818f9b17
 }
 ```
