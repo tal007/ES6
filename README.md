@@ -525,6 +525,243 @@ let oWrap = document.body;
     var firstName = message?.body?.user?.firstName || 'default';
 }
 ```
+<<<<<<< HEAD
+## Promise对象
+```javascript
+{
+    // 所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。
+    // Promise是一个对象
+    /* 
+        两个特点：
+            1、对象的状态不受外界影响。
+            Promise对象代表一个异步操作，有三种状态：pending（进行中）、fulfilled（已成功）和rejected（已失败）。
+            只有 异步操作 的结果，可以决定当前是哪一种状态，任何其他操作都无法改变这个状态。
+            2、一旦状态改变，就不会再变，任何时候都可以得到这个结果。
+            Promise对象的状态改变，只有两种可能：从pending变为fulfilled和从pending变为rejected。
+            只要这两种情况发生，状态就凝固了，不会再变了，会一直保持这个结果，这时就称为 resolved（已定型）。
+    */
+}
+{
+    // 基本用法
+    const promise = new Promise(function(resolve, reject) {
+        // ... some code
+      
+        if (/* 异步操作成功 */){
+          resolve(value);
+        } else {
+          reject(error);
+        }
+    });
+
+    // Promise构造函数接收一个函数作为参数，该函数接收连个参数，且都是函数，固定的两个
+    // resolve函数的作用是 ===> pending to resolve 异步操作成功时调用
+    // reject函数的作用是 ===> pending to reject 异步操作失败时调用
+
+    // Promise实例生成以后，可以用then方法分别指定resolved状态和rejected状态的回调函数。
+    // 这也是使用 fetch函数的原因
+    promise.then(function(value) {
+        // success ===> resolved ===> 得到请求结果 value
+      }, function(error) {
+        // failure ===> rejected
+    });
+
+    let promise = new Promise(function(resolve, reject) {
+        console.log('Promise');
+        resolve();
+    });
+    
+    // Promise 新建后就会立即执行。
+    promise.then(function() {
+        console.log('resolved.');
+    });
+    
+    console.log('Hi!');
+    
+    // Promise
+    // Hi!
+    // resolved
+}
+{
+    /* 
+        上面代码中，p1是一个 Promise，3 秒之后变为rejected。
+        p2的状态在 1 秒之后改变，resolve方法返回的是p1。
+        由于p2返回的是另一个 Promise，导致p2自己的状态无效了，由p1的状态决定p2的状态。
+        所以，后面的then语句都变成针对后者（p1）。
+        又过了 2 秒，p1变为rejected，导致触发catch方法指定的回调函数。
+    */
+    const p1 = new Promise(function (resolve, reject) {
+        setTimeout(() => reject(new Error('fail')), 3000)
+    })
+    const p2 = new Promise(function (resolve, reject) {
+        setTimeout(() => resolve(p1), 1000)
+    })
+    p2
+        .then(result => console.log(result))
+        .catch(error => console.log(error))
+        // Error: fail
+}
+{
+    // Promise.prototype.then()
+    // then方法的第一个参数是resolved状态的回调函数，第二个参数（可选）是rejected状态的回调函数。
+    // then方法返回的是一个新的Promise实例（注意，不是原来那个Promise实例）。因此可以采用链式写法，即then方法后面再调用另一个then方法。
+    getJSON("/post/1.json").then(
+        post => getJSON(post.commentURL)
+    ).then(
+        comments => console.log("resolved: ", comments),
+        err => console.log("rejected: ", err)
+    );
+}
+{
+    // Promise.prototype.catch()
+    // Promise.prototype.catch方法是.then(null, rejection)的别名，用于指定发生错误时的回调函数
+    // catch用于捕获Promise的错误，放在最后，无论前面哪一个环节出问题都会捕获到这个错误
+    // catch方法返回的还是一个 Promise 对象，因此后面还可以接着调用then方法。
+    getJSON('/post/1.json').then(function(post) {
+        return getJSON(post.commentURL);
+    }).then(function(comments) {
+    // some code
+    }).catch(function(error) {
+    // 一共有三个 Promise 对象：一个由getJSON产生，两个由then产生。它们之中任何一个抛出的错误，都会被最后一个catch捕获。
+    });
+
+    // 这也就导致一般不用用 reject 时候的函数，而是直接使用 catch
+}
+{
+    // Promise 内部的错误不会影响到 Promise 外部的代码
+}
+{
+    // Promise.all()  Promise.race()与 Promise.all()方法效果相同
+    // Promise.all方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。
+    // Promise.all方法接受一个数组作为参数
+    /* 
+        p1、p2、p3都是 Promise 实例，如果不是，就会先调用下面讲到的Promise.resolve方法，
+        将参数转为 Promise 实例，再进一步处理。（Promise.all方法的参数可以不是数组，
+        但必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例。）
+    */
+    // p1,p2,p3是且的关系，三个都是 fulfilled 那 p 就是fulfilled 否则就是 rejected
+    const p = Promise.all([p1, p2, p3]);
+    
+}
+{
+    // Promise.resolve()
+    // 将现有对象转为 Promise 对象
+
+}
+{
+    // Promise.reject(reason)
+    // Promise.reject(reason)方法也会返回一个新的 Promise 实例，该实例的状态为rejected。
+}
+```
+## Iterator 和 for...of 循环
+```javascript
+{
+    // Iterator（遍历器）的概念
+    /* 
+        遍历器（Iterator，。它是一种接口，为各种不同的数据结构提供统一的访问机制。
+        任何数据结构只要部署 Iterator 接口，就可以完成遍历操作（即依次处理该数据结构的所有成员）。
+
+        用于遍历表示“集合”的数据结构：Array Object Map Set TypedArray 函数的arguments对象 NodeList对象
+
+        Iterator 的作用有三个：
+        一是为各种数据结构，提供一个统一的、简便的访问接口；
+        二是使得数据结构的成员能够按某种次序排列；
+        三是 ES6 创造了一种新的遍历命令for...of循环，Iterator 接口主要供for...of消费。
+    */
+}
+{
+    // 调用 Iterator 接口的场合
+    // 有一些场合会默认调用 Iterator 接口（即Symbol.iterator方法）
+    /* 
+        （1）解构赋值：对数组和 Set 结构进行解构赋值时，会默认调用Symbol.iterator方法。
+        （2）扩展运算符：扩展运算符（...）也会调用默认的 Iterator 接口。
+        （3）yield*：yield*后面跟的是一个可遍历的结构，它会调用该结构的遍历器接口。
+        （4）其他场合
+            for...of
+            Array.from()
+            Map(), Set(), WeakMap(), WeakSet()（比如new Map([['a',1],['b',2]])）
+            Promise.all()
+            Promise.race()
+    
+    */
+    // 原理就是调用 Iterator 的 next() 方法
+}
+{
+    // 字符串是一个类似数组的对象，也原生具有 Iterator 接口。
+}
+{
+    // 遍历器对象的 return()，throw()
+    // 遍历器对象除了具有next方法，还可以具有return方法和throw方法。
+    // 如果你自己写遍历器对象生成函数，那么next方法是必须部署的，return方法和throw方法是否部署是可选的。
+}
+{
+    /* 
+        for...of 循环
+        ES6 借鉴 C++、Java、C# 和 Python 语言，引入了for...of循环，作为遍历所有数据结构的统一的方法。
+
+        一个数据结构只要部署了Symbol.iterator属性，就被视为具有 iterator 接口，
+        d就可以用for...of循环遍历它的成员。也就是说，for...of循环内部调用的是数据结构的Symbol.iterator方法。
+
+        for...of循环可以使用的范围包括
+        数组、
+        Set 和 Map 结构、
+        某些类似数组的对象（比如arguments对象、DOM NodeList 对象）、
+        Generator 对象，
+        字符串。
+    */
+    // 数组
+    // JavaScript 原有的for...in循环，只能获得对象的键名，不能直接获取键值。
+    // ES6 提供for...of循环，允许遍历获得键值。
+    var arr = ['a', 'b', 'c', 'd'];
+    
+    for (let a in arr) {
+        console.log(a); // 0 1 2 3
+    }
+    
+    for (let a of arr) {
+        console.log(a); // a b c d
+    }
+    // for...of循环调用遍历器接口，数组的遍历器接口只返回具有数字索引的属性。
+    let arr = [3, 5, 7];
+    arr.foo = 'hello';
+
+    for (let i in arr) {
+        console.log(i); // "0", "1", "2", "foo"
+    }
+
+    for (let i of arr) {
+        console.log(i); //  "3", "5", "7"
+    }
+}
+```
+
+## Generator 函数的语法
+```javascript
+{
+    /* 
+        调用 Generator 函数，返回一个遍历器对象（所以可以使用 for ... of ），代表 Generator 函数的内部指针。
+        以后，每次调用遍历器对象的next方法，就会返回一个有着value和done（是否完成遍历）两个属性的对象。
+        每次调用next方法，内部指针就从函数头部或上一次停下来的地方开始执行，直到遇到下一个yield表达式（或return语句）为止。
+        value属性表示当前的内部状态的值，是yield表达式后面那个表达式的值；
+        done属性是一个布尔值，表示是否遍历结束。
+    */
+    function* helloWorldGenerator() {
+        yield 'hello';
+        yield 'world';
+        return 'ending';
+    }
+    
+    // 调用并不会立即执行，而是返回一个遍历器对象，代表 Generator 函数的内部指针
+    var hw = helloWorldGenerator();
+    hw.next()
+    // { value: 'hello', done: false }
+    hw.next()
+    // { value: 'world', done: false }
+    hw.next()
+    // { value: 'ending', done: true }
+    hw.next()
+    // { value: undefined, done: true }
+    // 上面代码一共调用了四次next方法。
+=======
 
 ## Symbol
 ```javascript
@@ -707,5 +944,6 @@ let oWrap = document.body;
             首先，WeakMap只接受对象作为键名（null除外），不接受其他类型的值作为键名。
             其次，WeakMap的键名所指向的对象，不计入垃圾回收机制。
     */
+>>>>>>> 133a4f7893798ebab518c60f452f63ff818f9b17
 }
 ```
